@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Ch14TasksRoomDBHFReRev</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_task_txt">Enter Task</string>
+    <string name="add_task_btn_txt">Add Task</string>
+    <string name="no_tasks_to_show_txt">No Tasks to Show</string>
+</resources>
