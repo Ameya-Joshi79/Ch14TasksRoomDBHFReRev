@@ -14,6 +14,8 @@ parcelize = "2.0.0"
 lifecycle = "2.8.1"
 room = "2.6.1"
 ksp = "2.0.0-1.0.21"
+recyclerview = "1.3.2"
+recyclerviewselection = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -24,6 +26,8 @@ androidx-lifecycle-livedata = {group = "androidx.lifecycle", name = "lifecycle-l
 androidx-room-runtime = {group = "androidx.room", name = "room-runtime", version.ref = "room"}
 androidx-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "room"}
 androidx-room-kotlinx-coroutines = {group = "androidx.room", name = "room-ktx", version.ref = "room"}
+androidx-recycler-view = {group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview"}
+androidx-recycler-view-selection = {group = "androidx.recyclerview", name = "recyclerview-selection", version.ref = "recyclerviewselection"}
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
