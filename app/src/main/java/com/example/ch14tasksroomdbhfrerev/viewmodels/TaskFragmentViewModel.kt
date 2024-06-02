@@ -49,6 +49,14 @@ class TaskFragmentViewModel(val taskDao: TaskDao):ViewModel() {
 
     }//addTask
 
+
+    fun updateTask(task:Task){
+        viewModelScope.launch {
+            taskDao.update(task = task)
+        }
+    }
+
+
     fun formatTask(tasks:List<Task>):String{
 
         var tasksString:String = ""

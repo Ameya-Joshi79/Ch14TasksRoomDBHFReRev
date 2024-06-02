@@ -5,4 +5,7 @@
     <string name="enter_task_txt">Enter Task</string>
     <string name="add_task_btn_txt">Add Task</string>
     <string name="no_tasks_to_show_txt">No Tasks to Show</string>
+    <string name="task_name_display_txt">Task Name</string>
+    <string name="task_name_placeholder">Task Name Placeholder</string>
+    <string name="task_done_cb_txt">Done?</string>
 </resources>

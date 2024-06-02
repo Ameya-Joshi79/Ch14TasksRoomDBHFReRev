@@ -6,12 +6,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.example.ch14tasksroomdbhfrerev.adapters.TaskItemAdapter
 import com.example.ch14tasksroomdbhfrerev.databases.TaskDatabase
+import com.example.ch14tasksroomdbhfrerev.databinding.FragmentTasks2Binding
 import com.example.ch14tasksroomdbhfrerev.databinding.FragmentTasksBinding
+import com.example.ch14tasksroomdbhfrerev.interfaces.TaskCheckBoxClickedListner
+import com.example.ch14tasksroomdbhfrerev.interfaces.TaskClickListener
+import com.example.ch14tasksroomdbhfrerev.model.Task
 import com.example.ch14tasksroomdbhfrerev.viewmodels.TaskFragmentViewModel
 import com.example.ch14tasksroomdbhfrerev.viewmodels.TaskFragmentViewModelFactory
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,17 +34,26 @@ private const val ARG_PARAM2 = "param2"
  * Use the [TasksFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TasksFragment : Fragment() {
+class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    private var _fragmentTaskViewBinding:FragmentTasksBinding? = null
+    //private var _fragmentTaskViewBinding:FragmentTasksBinding? = null
 
-    private val fragmentTaskViewBinding:FragmentTasksBinding
+    private var _fragmentTaskViewBinding:FragmentTasks2Binding? = null
+
+//    private val fragmentTaskViewBinding:FragmentTasksBinding
+//        get() = _fragmentTaskViewBinding!!
+
+    private val fragmentTaskViewBinding:FragmentTasks2Binding
         get() = _fragmentTaskViewBinding!!
 
     private lateinit var taskFragmentViewModel:TaskFragmentViewModel
+
+    private lateinit var taskItemAdapter: TaskItemAdapter
+
+    private var taskList:MutableList<Task> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +67,9 @@ class TasksFragment : Fragment() {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_tasks, container, false)
 
-       _fragmentTaskViewBinding = FragmentTasksBinding.inflate(inflater, container, false)
+       //_fragmentTaskViewBinding = FragmentTasksBinding.inflate(inflater, container, false)
+
+        _fragmentTaskViewBinding = FragmentTasks2Binding.inflate(inflater, container, false)
 
         val view = fragmentTaskViewBinding.root
 
@@ -61,11 +83,17 @@ class TasksFragment : Fragment() {
 
         taskFragmentViewModel = ViewModelProvider(this, taskFragmentViewModelFactory).get(TaskFragmentViewModel::class.java)
 
-        fragmentTaskViewBinding.addTaskBtn.setOnClickListener {
+        taskItemAdapter = TaskItemAdapter(application,taskList, this, this)
 
-            val taskName = fragmentTaskViewBinding.taskEdtTxt.text.toString()
+        fragmentTaskViewBinding.taskRecyclerView.adapter = taskItemAdapter
 
-            fragmentTaskViewBinding.taskEdtTxt.text = null
+        fragmentTaskViewBinding.taskRecyclerView.layoutManager = GridLayoutManager(application, 2)
+
+        fragmentTaskViewBinding.addTaskBtn2.setOnClickListener {
+
+            val taskName = fragmentTaskViewBinding.taskEdtTxt2.text.toString()
+
+            fragmentTaskViewBinding.taskEdtTxt2.text = null
 
             taskFragmentViewModel.taskName = taskName
 
@@ -73,23 +101,76 @@ class TasksFragment : Fragment() {
 
         }//addTaskBtn.setOnClickListener
 
-        taskFragmentViewModel.taskListString.observe(viewLifecycleOwner){
-            if (it.isEmpty()){
-                fragmentTaskViewBinding.taskListTv.text = getString(R.string.no_tasks_to_show_txt)
-            }else{
-                Log.d("TASKFRAGMENT", it)
-                fragmentTaskViewBinding.taskListTv.text = it
-            }
-        }
+
+
+
+
+//        taskFragmentViewModel.taskListString.observe(viewLifecycleOwner){
+//            if (it.isEmpty()){
+//                fragmentTaskViewBinding.taskListTv.text = getString(R.string.no_tasks_to_show_txt)
+//            }else{
+//                Log.d("TASKFRAGMENT", it)
+//                fragmentTaskViewBinding.taskListTv.text = it
+//            }
+//        }
+
+//                taskFragmentViewModel.taskListString.observe(viewLifecycleOwner){
+//            if (it.isEmpty()){
+//                fragmentTaskViewBinding.taskListTv.text = getString(R.string.no_tasks_to_show_txt)
+//            }else{
+//                Log.d("TASKFRAGMENT", it)
+//                fragmentTaskViewBinding.taskListTv.text = it
+//            }
+//        }
 
 
         return view
     }
 
 
+    override fun onStart() {
+        super.onStart()
+
+        this.taskList.clear()
+
+        taskFragmentViewModel.tasks.observe(viewLifecycleOwner){
+
+            if (it.isNotEmpty()){
+                taskList.clear()
+                lifecycleScope.launch {
+                    it.forEach {task:Task ->
+                        taskList.add(task)
+                    }
+                }
+
+            }
+
+            taskItemAdapter.notifyDataSetChanged()
+
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _fragmentTaskViewBinding = null
+    }
+
+    override fun onTaskClicked(task: Task, itemPosition:Int) {
+      Log.d("TASKFRAGMENT", "${task.taskName} clicked at Position: $itemPosition.")
+    }
+
+    override fun onTaskCheckBoxClicked(task: Task, itemPosition: Int) {
+        Log.d("TASKFRAGMENT", "${task.taskName} clicked at Position: $itemPosition. Task Done? = ${task.taskComplete}")
+
+        taskFragmentViewModel.updateTask(task)
+
+        Log.d("TASKFRAGMENT", "Task at position $itemPosition updated")
+
     }
 
 }

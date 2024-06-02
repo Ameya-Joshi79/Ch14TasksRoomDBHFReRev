@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.room.kotlinx.coroutines)
     ksp(libs.androidx.room.compiler)
     annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.recycler.view)
+    implementation(libs.androidx.recycler.view.selection)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
