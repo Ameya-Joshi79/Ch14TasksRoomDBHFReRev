@@ -18,6 +18,7 @@ import com.example.ch14tasksroomdbhfrerev.adapters.TaskItemAdapterNew
 import com.example.ch14tasksroomdbhfrerev.databases.TaskDatabase
 import com.example.ch14tasksroomdbhfrerev.databinding.FragmentTasks2Binding
 import com.example.ch14tasksroomdbhfrerev.databinding.FragmentTasksBinding
+import com.example.ch14tasksroomdbhfrerev.interfaces.DeleteImgClickListener
 import com.example.ch14tasksroomdbhfrerev.interfaces.TaskCheckBoxClickedListner
 import com.example.ch14tasksroomdbhfrerev.interfaces.TaskClickListener
 import com.example.ch14tasksroomdbhfrerev.model.Task
@@ -35,7 +36,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [TasksFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner {
+class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner, DeleteImgClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -88,13 +89,15 @@ class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner 
 
         //taskItemAdapter = TaskItemAdapter(application,taskList, this, this)
 
-        taskItemAdapterNew = TaskItemAdapterNew(application, this, this)
+        taskItemAdapterNew = TaskItemAdapterNew(application, this, this, this)
 
 //        fragmentTaskViewBinding.taskRecyclerView.adapter = taskItemAdapter
 
         fragmentTaskViewBinding.taskRecyclerView.adapter = taskItemAdapterNew
 
-        fragmentTaskViewBinding.taskRecyclerView.layoutManager = GridLayoutManager(application, 2)
+        //fragmentTaskViewBinding.taskRecyclerView.layoutManager = GridLayoutManager(application, 2)
+
+        fragmentTaskViewBinding.taskRecyclerView.layoutManager = LinearLayoutManager(application)
 
         fragmentTaskViewBinding.addTaskBtn2.setOnClickListener {
 
@@ -182,6 +185,14 @@ class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner 
 
         Log.d("TASKFRAGMENT", "Task at position $itemPosition updated")
 
+    }
+
+    override fun onDeleteImgClickListener(task: Task, itemPosition: Int) {
+        Log.d("TASKFRAGMENT", "Delete ${task.taskName} from Room")
+
+        taskFragmentViewModel.deleteTask(task = task)
+
+        Log.d("TASKFRAGMENT", "TASK Deleted!")
     }
 
 }

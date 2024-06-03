@@ -6,4 +6,5 @@
     <string name="task_name_display_txt">Task Name</string>
     <string name="task_name_placeholder">Task Name Placeholder</string>
     <string name="task_done_cb_txt">Done?</string>
+    <string name="delete_button_image_text">Delete Button Image</string>
 </resources>
