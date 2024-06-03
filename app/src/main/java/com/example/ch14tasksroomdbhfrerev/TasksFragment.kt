@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.ch14tasksroomdbhfrerev.adapters.TaskItemAdapter
+import com.example.ch14tasksroomdbhfrerev.adapters.TaskItemAdapterNew
 import com.example.ch14tasksroomdbhfrerev.databases.TaskDatabase
 import com.example.ch14tasksroomdbhfrerev.databinding.FragmentTasks2Binding
 import com.example.ch14tasksroomdbhfrerev.databinding.FragmentTasksBinding
@@ -53,6 +54,8 @@ class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner 
 
     private lateinit var taskItemAdapter: TaskItemAdapter
 
+    private lateinit var taskItemAdapterNew: TaskItemAdapterNew
+
     private var taskList:MutableList<Task> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,9 +86,13 @@ class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner 
 
         taskFragmentViewModel = ViewModelProvider(this, taskFragmentViewModelFactory).get(TaskFragmentViewModel::class.java)
 
-        taskItemAdapter = TaskItemAdapter(application,taskList, this, this)
+        //taskItemAdapter = TaskItemAdapter(application,taskList, this, this)
 
-        fragmentTaskViewBinding.taskRecyclerView.adapter = taskItemAdapter
+        taskItemAdapterNew = TaskItemAdapterNew(application, this, this)
+
+//        fragmentTaskViewBinding.taskRecyclerView.adapter = taskItemAdapter
+
+        fragmentTaskViewBinding.taskRecyclerView.adapter = taskItemAdapterNew
 
         fragmentTaskViewBinding.taskRecyclerView.layoutManager = GridLayoutManager(application, 2)
 
@@ -135,17 +142,21 @@ class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner 
 
         taskFragmentViewModel.tasks.observe(viewLifecycleOwner){
 
-            if (it.isNotEmpty()){
-                taskList.clear()
-                lifecycleScope.launch {
-                    it.forEach {task:Task ->
-                        taskList.add(task)
-                    }
-                }
+//            if (it.isNotEmpty()){
+//                taskList.clear()
+//                lifecycleScope.launch {
+//                    it.forEach {task:Task ->
+//                        taskList.add(task)
+//                    }
+//                }
+//
+//            }
+//
+//            taskItemAdapter.notifyDataSetChanged()
 
+            it?.let {
+                taskItemAdapterNew.submitList(it)
             }
-
-            taskItemAdapter.notifyDataSetChanged()
 
         }
 
