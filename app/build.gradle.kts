@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.VectorDrawables
 
 
 plugins {
@@ -20,6 +21,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {

@@ -56,6 +56,12 @@ class TaskFragmentViewModel(val taskDao: TaskDao):ViewModel() {
         }
     }
 
+    fun deleteTask(task: Task){
+        viewModelScope.launch {
+            taskDao.delete(task)
+        }
+    }
+
 
     fun formatTask(tasks:List<Task>):String{
 
