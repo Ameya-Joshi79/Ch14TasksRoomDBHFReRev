@@ -2,6 +2,7 @@ package com.example.ch14tasksroomdbhfrerev.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
@@ -17,6 +18,12 @@ class TaskFragmentViewModel(val taskDao: TaskDao):ViewModel() {
 
     val tasks:LiveData<List<Task>>
         get() = taskDao.getAllTasks()
+
+
+    private val _navigateTask:MutableLiveData<Task?> = MutableLiveData()
+
+    val navigateTask:LiveData<Task?>
+        get() = _navigateTask
 
     val taskListString:LiveData<String>
         get() = tasks.map {
@@ -60,6 +67,15 @@ class TaskFragmentViewModel(val taskDao: TaskDao):ViewModel() {
         viewModelScope.launch {
             taskDao.delete(task)
         }
+    }
+
+    fun setNavigateTask(task:Task){
+        _navigateTask.value = task
+    }
+
+
+    fun onTaskNavigated(){
+        _navigateTask.value = null
     }
 
 
