@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -112,6 +113,16 @@ class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner,
         }//addTaskBtn.setOnClickListener
 
 
+        taskFragmentViewModel.navigateTask.observe(viewLifecycleOwner){
+            it?.let {
+                val action = TasksFragmentDirections.actionTasksFragmentToTaskDetailsFragment(it)
+
+                this.findNavController().navigate(action)
+
+                taskFragmentViewModel.onTaskNavigated()
+
+            }
+        }
 
 
 
@@ -176,6 +187,9 @@ class TasksFragment : Fragment(), TaskClickListener, TaskCheckBoxClickedListner,
 
     override fun onTaskClicked(task: Task, itemPosition:Int) {
       Log.d("TASKFRAGMENT", "${task.taskName} clicked at Position: $itemPosition.")
+
+        taskFragmentViewModel.setNavigateTask(task)
+
     }
 
     override fun onTaskCheckBoxClicked(task: Task, itemPosition: Int) {
